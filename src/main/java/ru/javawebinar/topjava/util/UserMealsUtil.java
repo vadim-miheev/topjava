@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.UserMealWithExcess;
 
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -58,7 +59,21 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
-        return null;
+        return Arrays.asList(
+                meals.stream()
+                        .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
+                        .map(meal -> new UserMealWithExcess(
+                                        meal.getDateTime(),
+                                        meal.getDescription(),
+                                        meal.getCalories(),
+                                        caloriesPerDay < meals.stream().collect(
+                                                Collectors.groupingBy(
+                                                        (UserMeal m) -> m.getDateTime().toLocalDate(),
+                                                        Collectors.summarizingInt(UserMeal::getCalories)
+                                                )
+                                        ).get(meal.getDateTime().toLocalDate()).getSum()
+                                )
+                        ).toArray(UserMealWithExcess[]::new)
+        );
     }
 }
