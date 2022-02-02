@@ -40,7 +40,7 @@ public class UserMealsUtil {
                                 meal.getDateTime(),
                                 meal.getDescription(),
                                 meal.getCalories(),
-                                caloriesDailyAmount.get(meal.getDateTime().toLocalDate()) > caloriesPerDay
+                                caloriesPerDay < caloriesDailyAmount.get(meal.getDateTime().toLocalDate())
                         )
                 );
             }
@@ -57,16 +57,14 @@ public class UserMealsUtil {
                 )
         );
 
-        return Arrays.asList(
-                meals.stream()
-                        .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
-                        .map(meal -> new UserMealWithExcess(
-                                        meal.getDateTime(),
-                                        meal.getDescription(),
-                                        meal.getCalories(),
-                                        caloriesPerDay < caloriesDailyAmount.get(meal.getDateTime().toLocalDate())
-                                )
-                        ).toArray(UserMealWithExcess[]::new)
-        );
+        return meals.stream()
+                .filter(meal -> TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime))
+                .map(meal -> new UserMealWithExcess(
+                                meal.getDateTime(),
+                                meal.getDescription(),
+                                meal.getCalories(),
+                                caloriesPerDay < caloriesDailyAmount.get(meal.getDateTime().toLocalDate())
+                        )
+                ).collect(Collectors.toList());
     }
 }
