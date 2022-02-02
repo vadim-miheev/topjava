@@ -26,30 +26,21 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-
         Map<LocalDate, Integer> caloriesDailyAmount = new HashMap<>();
-
         meals.forEach(meal -> {
             LocalDate date = meal.getDateTime().toLocalDate();
-            caloriesDailyAmount.put(
-                    date,
-                    caloriesDailyAmount.getOrDefault(date, 0) + meal.getCalories()
-            );
+            caloriesDailyAmount.put(date, caloriesDailyAmount.getOrDefault(date, 0) + meal.getCalories());
         });
 
         List<UserMealWithExcess> filteredList = new ArrayList<>();
-
         meals.forEach(meal -> {
-            LocalDate date = meal.getDateTime().toLocalDate();
-            LocalTime time = meal.getDateTime().toLocalTime();
-
-            if (TimeUtil.isBetweenHalfOpen(time, startTime, endTime)) {
+            if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
                 filteredList.add(
                         new UserMealWithExcess(
                                 meal.getDateTime(),
                                 meal.getDescription(),
                                 meal.getCalories(),
-                                caloriesDailyAmount.get(date) > caloriesPerDay
+                                caloriesDailyAmount.get(meal.getDateTime().toLocalDate()) > caloriesPerDay
                         )
                 );
             }
@@ -69,9 +60,9 @@ public class UserMealsUtil {
                                         caloriesPerDay < meals.stream().collect(
                                                 Collectors.groupingBy(
                                                         (UserMeal m) -> m.getDateTime().toLocalDate(),
-                                                        Collectors.summarizingInt(UserMeal::getCalories)
+                                                        Collectors.summingInt(UserMeal::getCalories)
                                                 )
-                                        ).get(meal.getDateTime().toLocalDate()).getSum()
+                                        ).get(meal.getDateTime().toLocalDate())
                                 )
                         ).toArray(UserMealWithExcess[]::new)
         );
