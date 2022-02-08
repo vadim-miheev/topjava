@@ -29,6 +29,8 @@
             <td><javatime:format value="${meal.getDateTime()}" pattern="yyyy-MM-dd HH-mm"/></td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
+            <td><a href="">Update</a></td>
+            <td><a href="">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
