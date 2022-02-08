@@ -26,7 +26,7 @@
     <jsp:useBean id="mealsList" scope="request" type="java.util.List"/>
     <c:forEach items="${mealsList}" var="meal">
         <tr style="color: ${meal.isExcess() ? "red" : "green"};">
-            <td><javatime:format value="${meal.getDateTime()}" pattern="yyyy-MM-dd HH-mm"/></td>
+            <td><javatime:format value="${meal.getDateTime()}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
             <td><a href="">Update</a></td>
