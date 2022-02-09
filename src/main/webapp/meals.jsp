@@ -30,7 +30,7 @@
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
             <td><a href="">Update</a></td>
-            <td><a href="">Delete</a></td>
+            <td><a href="?delete=${meal.getId()}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

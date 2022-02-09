@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealsRepositoryInLocalMemory implements MealsRepository {
     private static MealsRepositoryInLocalMemory instance = null;
-    private final AtomicInteger idCounter = new AtomicInteger(0);
+    private final AtomicInteger idCounter = new AtomicInteger(1);
     private final Map<Integer, Meal> mealMap = new ConcurrentHashMap<>();
 
     private MealsRepositoryInLocalMemory() {
