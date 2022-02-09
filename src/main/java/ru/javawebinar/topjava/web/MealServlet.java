@@ -15,13 +15,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
+    private static final int CALORIES_PER_DAY_LIMIT = 2000;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to meals");
 
-        request.setAttribute("mealsList", MealsUtil.filteredByStreams(new MealsRepositoryInLocalMemory().getMeals(), LocalTime.MIN, LocalTime.MAX,
-                MealsRepositoryInLocalMemory.CALORIES_PER_DAY_LIMIT));
+        request.setAttribute("mealsList", MealsUtil.filteredByStreams(MealsRepositoryInLocalMemory.getInstance().getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY_LIMIT));
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 }

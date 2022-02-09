@@ -4,42 +4,57 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealsRepositoryInLocalMemory implements MealsRepository {
-    public static final int CALORIES_PER_DAY_LIMIT = 2000;
-    private List<Meal> meals;
+    private static MealsRepositoryInLocalMemory instance = null;
+    private final AtomicInteger idCounter = new AtomicInteger(0);
+    private final Map<Integer, Meal> mealMap = new ConcurrentHashMap<>();
 
-    public MealsRepositoryInLocalMemory() {
-        meals = Arrays.asList(
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
-        );
+    private MealsRepositoryInLocalMemory() {
+        fillingRepositoryByDefaultValues();
+    }
+
+    public static MealsRepositoryInLocalMemory getInstance() {
+        if (instance == null)
+            instance = new MealsRepositoryInLocalMemory();
+
+        return instance;
+    }
+
+    private void fillingRepositoryByDefaultValues() {
+        create(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
+        create(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);
+        create(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500);
+        create(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100);
+        create(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000);
+        create(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500);
+        create(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410);
     }
 
     @Override
-    public List<Meal> getMeals() {
-        return meals;
+    public List<Meal> getAll() {
+        return new ArrayList<>(mealMap.values());
     }
 
     @Override
-    public void createMeal(Meal meal) {
-        //TODO to implement;
+    public Meal create(LocalDateTime date, String description, int calories) {
+        Meal newMeal = new Meal(idCounter.getAndIncrement(), date, description, calories);
+        mealMap.put(newMeal.getId(), newMeal);
+        return newMeal;
     }
 
     @Override
-    public void updateMeal(Meal meal) {
-        //TODO to implement;
+    public Meal update(Meal meal) {
+        return mealMap.replace(meal.getId(), meal);
     }
 
     @Override
-    public void deleteMeal(int id) {
-        //TODO to implement;
+    public void delete(int id) {
+        mealMap.remove(id);
     }
 }
