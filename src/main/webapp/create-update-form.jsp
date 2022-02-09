@@ -1,5 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%--@elvariable id="title" type="String"--%>
+<%--@elvariable id="oldMeal" type="ru.javawebinar.topjava.model.Meal"--%>
 <html>
 <head>
 
