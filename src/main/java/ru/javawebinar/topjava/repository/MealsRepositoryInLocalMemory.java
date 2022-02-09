@@ -37,6 +37,11 @@ public class MealsRepositoryInLocalMemory implements MealsRepository {
     }
 
     @Override
+    public Meal get(int id) {
+        return mealMap.get(id);
+    }
+
+    @Override
     public List<Meal> getAll() {
         return new ArrayList<>(mealMap.values());
     }

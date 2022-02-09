@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MealsRepository {
+    Meal get(int id);
+
     List<Meal> getAll();
 
     Meal create(LocalDateTime date, String description, int calories);

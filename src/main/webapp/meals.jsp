@@ -19,6 +19,7 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
+<p><a href="?show-form=create">Add new</a></p>
 <table>
     <tr>
         <td>Date</td><td>Description</td><td>Calories</td>
@@ -29,7 +30,7 @@
             <td><javatime:format value="${meal.getDateTime()}" pattern="yyyy-MM-dd HH:mm"/></td>
             <td>${meal.getDescription()}</td>
             <td>${meal.getCalories()}</td>
-            <td><a href="">Update</a></td>
+            <td><a href="?show-form=update&id=${meal.getId()}">Update</a></td>
             <td><a href="?delete=${meal.getId()}">Delete</a></td>
         </tr>
     </c:forEach>
