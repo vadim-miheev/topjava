@@ -19,13 +19,13 @@ public class LocalMemoryMealsRepository implements MealsRepository {
     }
 
     private void fillingRepositoryByDefaultValues() {
-        create(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
-        create(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);
-        create(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500);
-        create(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100);
-        create(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000);
-        create(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500);
-        create(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410);
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500));
+        create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410));
     }
 
     @Override
@@ -39,10 +39,16 @@ public class LocalMemoryMealsRepository implements MealsRepository {
     }
 
     @Override
-    public Meal create(LocalDateTime date, String description, int calories) {
-        Meal newMeal = new Meal(idCounter.getAndIncrement(), date, description, calories);
-        mealMap.put(newMeal.getId(), newMeal);
-        return newMeal;
+    public Meal create(Meal meal) {
+        if (meal.getId() != null) {
+            if (mealMap.containsKey(meal.getId())) {
+                return null;
+            }
+        } else {
+            meal.setId(idCounter.getAndIncrement());
+        }
+        mealMap.put(meal.getId(), meal);
+        return meal;
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface MealsRepository {
 
     List<Meal> getAll();
 
-    Meal create(LocalDateTime date, String description, int calories);
+    Meal create(Meal meal);
 
     Meal update(Meal meal);
 

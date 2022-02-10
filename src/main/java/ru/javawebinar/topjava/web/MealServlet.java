@@ -57,7 +57,7 @@ public class MealServlet extends HttpServlet {
             if (!request.getParameter("id").isEmpty()) {
                 mealsRepository.update(new Meal(Integer.parseInt(request.getParameter("id")), dateTime, description, calories));
             } else {
-                mealsRepository.create(dateTime, description, calories);
+                mealsRepository.create(new Meal(dateTime, description, calories));
             }
         }
         response.sendRedirect("meals");
