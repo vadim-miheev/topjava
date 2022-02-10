@@ -42,7 +42,7 @@ public class LocalMemoryMealsRepository implements MealsRepository {
     public Meal create(Meal meal) {
         if (meal.getId() != null) {
             if (mealMap.containsKey(meal.getId())) {
-                return null;
+                throw new IllegalArgumentException("Meal with id = " + meal.getId() + " already exist");
             }
         } else {
             meal.setId(idCounter.getAndIncrement());
