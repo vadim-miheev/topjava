@@ -10,20 +10,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MealsRepositoryInLocalMemory implements MealsRepository {
-    private static MealsRepositoryInLocalMemory instance = null;
-    private final AtomicInteger idCounter = new AtomicInteger(1);
+public class LocalMemoryMealsRepository implements MealsRepository {
+    private final AtomicInteger idCounter = new AtomicInteger(0);
     private final Map<Integer, Meal> mealMap = new ConcurrentHashMap<>();
 
-    private MealsRepositoryInLocalMemory() {
+    public LocalMemoryMealsRepository() {
         fillingRepositoryByDefaultValues();
-    }
-
-    public static MealsRepositoryInLocalMemory getInstance() {
-        if (instance == null)
-            instance = new MealsRepositoryInLocalMemory();
-
-        return instance;
     }
 
     private void fillingRepositoryByDefaultValues() {
@@ -55,7 +47,8 @@ public class MealsRepositoryInLocalMemory implements MealsRepository {
 
     @Override
     public Meal update(Meal meal) {
-        return mealMap.replace(meal.getId(), meal);
+        mealMap.replace(meal.getId(), meal);
+        return meal;
     }
 
     @Override

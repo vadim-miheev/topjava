@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.util;
 
-import ru.javawebinar.topjava.repository.MealsRepositoryInLocalMemory;
+import ru.javawebinar.topjava.repository.LocalMemoryMealsRepository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
     public static void main(String[] args) {
-        List<MealTo> mealsTo = filteredByStreams(MealsRepositoryInLocalMemory.getInstance().getAll(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        List<MealTo> mealsTo = filteredByStreams(new LocalMemoryMealsRepository().getAll(),
+                LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         mealsTo.forEach(System.out::println);
     }
 

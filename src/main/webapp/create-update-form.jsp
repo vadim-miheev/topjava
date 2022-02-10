@@ -1,9 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%--@elvariable id="title" type="String"--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--@elvariable id="formName" type="String"--%>
 <%--@elvariable id="oldMeal" type="ru.javawebinar.topjava.model.Meal"--%>
+
+<c:if test='${"create".equals(formName)}'>
+    <c:set var="title" value="Create new Meal"/>
+</c:if>
+<c:if test='${"update".equals(formName)}'>
+    <c:set var="title" value="Edit Meal"/>
+</c:if>
+
 <html>
 <head>
-
     <title>${title}</title>
     <style>
         .form-line {
@@ -13,6 +21,10 @@
         .field-label {
             display: inline-block;
             width: 150px;
+        }
+        .no-style-link {
+            text-decoration: none;
+            color: black;
         }
     </style>
 </head>
@@ -35,7 +47,7 @@
     </div>
     <input type="hidden" name="id" value="${oldMeal.id}">
     <input type="submit" value="Save">
-    <button><a href="meals" style="text-decoration: none; color: black;">Cancel</a></button>
+    <button><a href="meals" class="no-style-link">Cancel</a></button>
 </form>
 </body>
 </html>
