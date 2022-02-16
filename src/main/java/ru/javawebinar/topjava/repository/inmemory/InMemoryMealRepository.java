@@ -5,12 +5,14 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -53,8 +55,22 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
+        return getAllWithPredicate(userId, meal -> true);
+    }
+
+    @Override
+    public List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
+        return getAllWithPredicate(
+                userId,
+                meal -> (startDate == null || meal.getDate().isAfter(startDate) || meal.getDate().equals(startDate)) &&
+                        (endDate == null || meal.getDate().isBefore(endDate) || meal.getDate().equals(endDate))
+        );
+    }
+
+    private List<Meal> getAllWithPredicate(int userId, Predicate<Meal> filter) {
         Map<Integer, Meal> userMeals = repository.getOrDefault(userId, new HashMap<>());
         return userMeals.values().stream()
+                .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 }
