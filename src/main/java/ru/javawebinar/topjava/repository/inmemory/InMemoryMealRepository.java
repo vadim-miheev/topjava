@@ -6,10 +6,7 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -21,19 +18,22 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(meal, meal.getUserId()));
+        AtomicInteger count = new AtomicInteger(6);
+        MealsUtil.meals.forEach(meal -> save(meal, count.getAndDecrement() > 0 ? 1 : 2));
     }
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Map<Integer, Meal> userMeals = repository.get(userId);
-        if (userMeals == null) {
-            userMeals = new ConcurrentHashMap<>();
-            repository.put(userId, userMeals);
+        Map<Integer, Meal> userMeals;
+        synchronized (repository) {
+            userMeals = repository.get(userId);
+            if (userMeals == null) {
+                userMeals = new ConcurrentHashMap<>();
+                repository.put(userId, userMeals);
+            }
         }
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
             userMeals.put(meal.getId(), meal);
             return meal;
         }
@@ -62,16 +62,18 @@ public class InMemoryMealRepository implements MealRepository {
     public List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate) {
         return getAllWithPredicate(
                 userId,
-                meal -> (startDate == null || meal.getDate().isAfter(startDate) || meal.getDate().equals(startDate)) &&
-                        (endDate == null || meal.getDate().isBefore(endDate) || meal.getDate().equals(endDate))
+                meal -> (startDate == null || !meal.getDate().isBefore(startDate))
+                        && (endDate == null || !meal.getDate().isAfter(endDate))
         );
     }
 
     private List<Meal> getAllWithPredicate(int userId, Predicate<Meal> filter) {
-        Map<Integer, Meal> userMeals = repository.getOrDefault(userId, new HashMap<>());
+        Map<Integer, Meal> userMeals = repository.get(userId);
+        if (userMeals == null) return new ArrayList<>();
         return userMeals.values().stream()
                 .filter(filter)
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }
 

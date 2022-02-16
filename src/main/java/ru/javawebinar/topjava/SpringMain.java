@@ -22,7 +22,12 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            List<MealTo> mealList =  mealRestController.getAll(LocalDate.of(2020, Month.JANUARY, 29), LocalDate.of(2020, Month.JANUARY, 30), LocalTime.of(10,0), LocalTime.of(13,1));
+            List<MealTo> mealList =  mealRestController.getAllFiltered(
+                    LocalDate.of(2020, Month.JANUARY, 29),
+                    LocalDate.of(2020, Month.JANUARY, 30),
+                    LocalTime.of(10,0),
+                    LocalTime.of(13,1)
+            );
             System.out.println("Filtered meals: " + mealList);
         }
     }

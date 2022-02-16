@@ -25,7 +25,7 @@ public class MealService {
         return MealsUtil.getTos(repository.getAll(authUserId), authUserCaloriesPerDay);
     }
 
-    public List<MealTo> getAll(int authUserId, int authUserCaloriesPerDay, LocalDate startDate, LocalDate endDate,
+    public List<MealTo> getAllFiltered(int authUserId, int authUserCaloriesPerDay, LocalDate startDate, LocalDate endDate,
                                LocalTime startTime, LocalTime endTime) {
         return MealsUtil.getFilteredTos(repository.getAll(authUserId, startDate, endDate), authUserCaloriesPerDay,
                 startTime, endTime);
