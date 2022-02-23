@@ -127,6 +127,11 @@ public class MealServiceTest {
     }
 
     @Test
+    public void deleteWithWrongUserId() {
+        adminMeals.forEach(meal -> assertThrows(NotFoundException.class, () -> service.delete(meal.getId(), USER_ID)));
+    }
+
+    @Test
     public void deletedNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
     }
