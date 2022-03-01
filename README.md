@@ -1,3 +1,6 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/edca612dc51b424e90c66e75bd02d136)](https://www.codacy.com/gh/vadim-miheev/topjava/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vadim-miheev/topjava&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://app.travis-ci.com/vadim-miheev/topjava.svg?branch=master)](https://app.travis-ci.com/vadim-miheev/topjava)
+
 Java Enterprise Online Project
 ===============================
 
