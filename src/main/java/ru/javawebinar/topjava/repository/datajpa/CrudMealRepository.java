@@ -10,12 +10,16 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    Meal findMealByIdAndUser_Id(int id, int UserId);
+    Meal findMealByIdAndUser_Id(int id, int userId);
 
-    List<Meal> findAllByUser_IdOrderByDateTimeDesc(int UserId);
+    List<Meal> findAllByUser_IdOrderByDateTimeDesc(int userId);
 
-    List<Meal> findAllByDateTimeGreaterThanEqualAndDateTimeLessThanAndUser_IdOrderByDateTimeDesc(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId);
+    @Modifying
+    @Query("SELECT m FROM Meal m WHERE m.dateTime>=:sdt AND m.dateTime<:edt AND m.user.id=:user_id ORDER BY m.dateTime DESC")
+    List<Meal> getBetweenHalfOpen(@Param("sdt") LocalDateTime startDateTime, @Param("edt") LocalDateTime endDateTime,
+                                  @Param("user_id") int userId);
 
     @Transactional
     @Modifying
