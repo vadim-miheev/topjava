@@ -57,14 +57,12 @@ public class JspMealController extends AbstractMealController {
     public String createMealPage(Model model) {
         model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
                 "", 1000));
-        model.addAttribute("pageType", "new");
         return "mealForm";
     }
 
     @GetMapping("/meals/edit")
     public String updateMealPage(Model model, @RequestParam(name = "id") int id) {
         model.addAttribute("meal", super.get(id));
-        model.addAttribute("pageType", "edit");
         return "mealForm";
     }
 }
