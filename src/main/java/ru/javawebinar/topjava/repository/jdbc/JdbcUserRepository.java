@@ -125,13 +125,13 @@ public class JdbcUserRepository implements UserRepository {
 
     private int[] userRoleBatchUpdate(Set<Role> roles, int user_id) {
         return this.jdbcTemplate.batchUpdate(
-                "update user_roles set role = ? where user_id = ?",
+                "insert into user_roles (user_id, role) values(?,?)",
                 new BatchPreparedStatementSetter() {
 
                     public void setValues(PreparedStatement ps, int i)
                             throws SQLException {
-                        ps.setString(1, roles.toArray()[i].toString());
-                        ps.setInt(2, user_id);
+                        ps.setInt(1, user_id);
+                        ps.setString(2, roles.toArray()[i].toString());
                     }
 
                     public int getBatchSize() {
