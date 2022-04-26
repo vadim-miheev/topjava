@@ -1,30 +1,27 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+@RestController
+@RequestMapping(value = "/meals/ui", produces = MediaType.APPLICATION_JSON_VALUE)
+public class MealUIController extends AbstractMealController {
 
-@Controller
-@RequestMapping("/meals")
-public class JspMealController extends AbstractMealController {
-
-    @GetMapping("/delete")
-    public String delete(HttpServletRequest request) {
-        super.delete(getId(request));
-        return "redirect:/meals";
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+        super.delete(id);
     }
 
     @GetMapping("/update")
@@ -53,14 +50,12 @@ public class JspMealController extends AbstractMealController {
         return "redirect:/meals";
     }
 
-    @GetMapping("/filter")
-    public String getBetween(HttpServletRequest request, Model model) {
-        LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
-        LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
-        LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
-        LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-        model.addAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
-        return "meals";
+    @GetMapping
+    public List<MealTo> getBetween(@RequestParam @Nullable LocalDate startDate,
+                                   @RequestParam @Nullable LocalTime startTime,
+                                   @RequestParam @Nullable LocalDate endDate,
+                                   @RequestParam @Nullable LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 
     private int getId(HttpServletRequest request) {
