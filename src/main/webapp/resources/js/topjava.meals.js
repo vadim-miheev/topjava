@@ -38,4 +38,27 @@ $(function () {
             ]
         })
     );
+
+    $(".datepicker").datetimepicker({
+        timepicker:false,
+        format:'Y-m-d'
+    });
+
+    $(".timepicker").datetimepicker({
+        datepicker:false,
+        format:'H:i'
+    });
+
 });
+
+function updateFilter() {
+    $.get(ctx.ajaxUrl + "?" + $("#filter-form").serialize()).done(function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+        successNoty("Updated");
+    });
+}
+
+function clearFilter() {
+    $("#filter-form input").val("");
+    updateTable();
+}

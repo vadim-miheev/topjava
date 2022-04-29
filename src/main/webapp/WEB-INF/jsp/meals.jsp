@@ -7,37 +7,54 @@
 <body>
 <script src="resources/js/topjava.common.js" defer></script>
 <script src="resources/js/topjava.meals.js" defer></script>
+
+<script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.min.js" defer></script>
+<link rel="stylesheet" href="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.min.css">
+
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
 
-        <form method="get" action="meals/filter">
-            <dl>
-                <dt><spring:message code="meal.startDate"/>:</dt>
-                <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
-            </dl>
-            <dl>
-                <dt><spring:message code="meal.endDate"/>:</dt>
-                <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
-            </dl>
-            <dl>
-                <dt><spring:message code="meal.startTime"/>:</dt>
-                <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
-            </dl>
-            <dl>
-                <dt><spring:message code="meal.endTime"/>:</dt>
-                <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
-            </dl>
-            <button type="submit"><spring:message code="meal.filter"/></button>
-        </form>
-        <hr>
+        <div class="card border-dark">
+            <div class="card-body pb-0">
+                <form id="filter-form">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="startDate"><spring:message code="meal.startDate"/>:</label>
+                            <input id="startDate" class="datepicker form-control" type="text" name="startDate" value="${param.startDate}">
+                        </div>
+                        <div class="col-2">
+                            <label for="endDate"><spring:message code="meal.endDate"/>:</label>
+                            <input id="endDate" class="datepicker form-control" type="text" name="endDate" value="${param.endDate}">
+                        </div>
+                        <div class="offset-2 col-3">
+                            <label for="startTime"><spring:message code="meal.startTime"/>:</label>
+                            <input id="startTime" class="timepicker form-control" type="text" name="startTime" value="${param.startTime}">
+                        </div>
+                        <div class="col-3">
+                            <label for="endTime"><spring:message code="meal.endTime"/>:</label>
+                            <input id="endTime" class="timepicker form-control" type="text" name="endTime" value="${param.endTime}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-danger" onclick="clearFilter()">
+                    <span class="fa fa-remove"></span> <spring:message code="common.cancel"/>
+                </button>
+                <button class="btn btn-primary" onclick="updateFilter()">
+                    <span class="fa fa-filter"></span> <spring:message code="meal.filter"/>
+                </button>
+            </div>
+        </div>
+        <br>
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
             <spring:message code="meal.add"/>
         </button>
-        <hr>
+        <br>
         <table class="table table-striped" id="datatable">
             <thead>
             <tr >
