@@ -44,4 +44,21 @@ $(function () {
             ]
         })
     );
+
+    $(".user-enabled").on("input", function (e){
+        const user_id = e.target.parentNode.parentNode.id;
+        const enabled = e.target.checked;
+        console.log(user_id, enabled);
+        $.ajax({
+            type: "POST",
+            url: ctx.ajaxUrl + "enable",
+            contentType: "application/json",
+            data: JSON.stringify({"id": user_id, "enable": enabled})
+        }).done(function () {
+            updateTable();
+            successNoty("Saved");
+        });
+    });
+
 });
+

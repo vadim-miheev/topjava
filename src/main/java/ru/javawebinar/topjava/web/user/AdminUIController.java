@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.web.user;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -31,5 +33,11 @@ public class AdminUIController extends AbstractUserController {
                        @RequestParam String email,
                        @RequestParam String password) {
         super.create(new User(null, name, email, password, Role.USER));
+    }
+
+    @PostMapping(value = "/enable", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@RequestBody @NotNull ObjectNode node) {
+        super.enable(node.get("id").asInt(), node.get("enable").asBoolean());
     }
 }
