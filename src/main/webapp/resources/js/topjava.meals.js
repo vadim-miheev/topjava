@@ -29,12 +29,6 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (data, type, row) {
-                        if (type === "display") {
-                            return data.replace("T", " ").substring(0, 16);
-                        }
-                        return data;
-                    }
                 },
                 {
                     "data": "description"
@@ -64,4 +58,9 @@ $(function () {
             }
         })
     );
+
+    $("#dateTime").datetimepicker({
+        timepicker: true,
+        format:'Y-m-d H:i'
+    });
 });

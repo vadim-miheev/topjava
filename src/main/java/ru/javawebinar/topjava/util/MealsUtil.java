@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
 
+    public static final String MEAL_DATE_TIME_UI_PATTERN = "yyyy-MM-dd HH:mm";
+
     private MealsUtil() {
     }
 

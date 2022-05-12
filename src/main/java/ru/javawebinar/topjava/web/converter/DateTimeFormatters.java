@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+import static ru.javawebinar.topjava.util.MealsUtil.MEAL_DATE_TIME_UI_PATTERN;
 
 public class DateTimeFormatters {
     public static class LocalDateFormatter implements Formatter<LocalDate> {
@@ -40,10 +41,15 @@ public class DateTimeFormatters {
     }
 
     public static class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
-
         @Override
         public LocalDateTime parse(String text, Locale locale) {
-            return StringUtils.hasLength(text) ? LocalDateTime.parse(text) : null;
+            if(StringUtils.hasLength(text)) {
+                return text.length() == 16
+                        ? LocalDateTime.parse(text, DateTimeFormatter.ofPattern(MEAL_DATE_TIME_UI_PATTERN))
+                        : LocalDateTime.parse(text);
+            }
+
+            return null;
         }
 
         @Override

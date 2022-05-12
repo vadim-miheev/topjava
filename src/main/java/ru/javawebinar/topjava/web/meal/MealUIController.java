@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealToUI;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.Valid;
@@ -19,16 +19,14 @@ import java.util.List;
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealUIController extends AbstractMealController {
 
-    @Override
     @GetMapping
-    public List<MealTo> getAll() {
-        return super.getAll();
+    public List<MealToUI> getAllUI() {
+        return super.getAll().stream().map(MealToUI::getFromMealTo).toList();
     }
 
-    @Override
     @GetMapping("/{id}")
-    public Meal get(@PathVariable int id) {
-        return super.get(id);
+    public MealToUI getUI(@PathVariable int id) {
+        return MealToUI.getFromMeal(super.get(id));
     }
 
     @Override
@@ -51,13 +49,12 @@ public class MealUIController extends AbstractMealController {
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @GetMapping("/filter")
-    public List<MealTo> getBetween(
+    public List<MealToUI> getBetweenUI(
             @RequestParam @Nullable LocalDate startDate,
             @RequestParam @Nullable LocalTime startTime,
             @RequestParam @Nullable LocalDate endDate,
             @RequestParam @Nullable LocalTime endTime) {
-        return super.getBetween(startDate, startTime, endDate, endTime);
+        return super.getBetween(startDate, startTime, endDate, endTime).stream().map(MealToUI::getFromMealTo).toList();
     }
 }
