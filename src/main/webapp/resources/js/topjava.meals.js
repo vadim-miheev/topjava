@@ -61,6 +61,19 @@ $(function () {
 
     $("#dateTime").datetimepicker({
         timepicker: true,
+        datepicker: true,
         format:'Y-m-d H:i'
+    });
+
+    $("#startDate, #endDate").datetimepicker({
+        timepicker: false,
+        datepicker: true,
+        format:'Y-m-d'
+    });
+
+    $("#startTime, #endTime").datetimepicker({
+        timepicker: true,
+        datepicker: false,
+        format:'H:i'
     });
 });
