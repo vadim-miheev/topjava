@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -11,10 +13,17 @@ import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileUIController extends AbstractUserController {
+
+    final ReloadableResourceBundleMessageSource messageSource;
+
+    public ProfileUIController(ReloadableResourceBundleMessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @GetMapping
     public String profile() {
@@ -41,12 +50,19 @@ public class ProfileUIController extends AbstractUserController {
     }
 
     @PostMapping("/register")
-    public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model) {
+    public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model, Locale loc) {
         if (result.hasErrors()) {
             model.addAttribute("register", true);
             return "profile";
         } else {
-            super.create(userTo);
+            try {
+                super.create(userTo);
+            } catch (DataIntegrityViolationException e) {
+                result.rejectValue("email", "DATA_ERROR", messageSource.getMessage("user.emailDuplicate", null, loc));
+                model.addAttribute("register", true);
+                return "profile";
+            }
+
             status.setComplete();
             return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
         }
