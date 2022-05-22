@@ -71,6 +71,18 @@
     </bean>
 
     <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <!--<mvc:exclude-mapping path="/resources/**" />-->
+            <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+                <property name="paramName" value="lang"/>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+    <mvc:interceptors>
         <bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
     </mvc:interceptors>
 </beans>
